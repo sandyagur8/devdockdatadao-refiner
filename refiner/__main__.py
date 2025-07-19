@@ -5,27 +5,28 @@ import sys
 import traceback
 import zipfile
 
-from refiner.refine import Refiner
+from refiner.simple_refine import SimpleRefiner
 from refiner.config import settings
 
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 
 def run() -> None:
-    """Transform all input files into the database."""
+    """Transform all input files using simple transformation for verification."""
     input_files_exist = os.path.isdir(settings.INPUT_DIR) and bool(os.listdir(settings.INPUT_DIR))
 
     if not input_files_exist:
         raise FileNotFoundError(f"No input files found in {settings.INPUT_DIR}")
+    
     extract_input()
 
-    refiner = Refiner()
+    refiner = SimpleRefiner()
     output = refiner.transform()
     
     output_path = os.path.join(settings.OUTPUT_DIR, "output.json")
     with open(output_path, 'w') as f:
         json.dump(output.model_dump(), f, indent=2)    
-    logging.info(f"Data transformation complete: {output}")
+    logging.info(f"Simple data transformation complete: {output}")
 
 
 def extract_input() -> None:

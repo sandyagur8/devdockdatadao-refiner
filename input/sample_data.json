@@ -1,0 +1,22 @@
+{
+    "instruction_dataset": [{
+        "id": "example_001",
+        "instruction_type": "bug_fixing",
+        "instruction": "Fix the syntax error in this Python function",
+        "input": "def calculate_sum(a, b):\n    return a + b\n\nresult = calculate_sum(5, 3\nprint(result)",
+        "output": "def calculate_sum(a, b):\n    return a + b\n\nresult = calculate_sum(5, 3)\nprint(result)",
+        "context": {
+            "language": "python",
+            "user_prompt": "There's a syntax error in my function, can you help me fix it?"
+        },
+        "timestamp": "2024-01-15T10:30:00Z",
+        "model_used": "claude-3-sonnet"
+    }],
+    "dataset_metadata": {
+        "version": "1.0.0",
+        "created_at": "2024-01-15T10:30:00Z",
+        "sample_count": 1,
+        "license": "MIT",
+        "source": "VS Code Extension Data Collection"
+    }
+}

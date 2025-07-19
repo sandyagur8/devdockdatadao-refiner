@@ -15,28 +15,28 @@ class Settings(BaseSettings):
         description="Directory where output files will be written"
     )
     
-    REFINEMENT_ENCRYPTION_KEY: str = Field(
-        default=None,
+    REFINEMENT_ENCRYPTION_KEY: Optional[str] = Field(
+        default="0x1234",
         description="Key to symmetrically encrypt the refinement. This is derived from the original file encryption key"
     )
     
     SCHEMA_NAME: str = Field(
-        default="Google Drive Analytics",
+        default="Coding Assistant Training Data Schema",
         description="Name of the schema"
     )
     
     SCHEMA_VERSION: str = Field(
-        default="0.0.1",
+        default="1.0.0",
         description="Version of the schema"
     )
     
     SCHEMA_DESCRIPTION: str = Field(
-        default="Schema for the Google Drive DLP, representing some basic analytics of the Google user",
+        default="Schema for collecting high-quality data from VS Code extension for fine-tuning coding language models",
         description="Description of the schema"
     )
     
     SCHEMA_DIALECT: str = Field(
-        default="sqlite",
+        default="json-schema",
         description="Dialect of the schema"
     )
     
