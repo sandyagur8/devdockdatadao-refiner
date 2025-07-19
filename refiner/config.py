@@ -36,7 +36,7 @@ class Settings(BaseSettings):
     )
     
     SCHEMA_DIALECT: str = Field(
-        default="json-schema",
+        default="sqlite",
         description="Dialect of the schema"
     )
     

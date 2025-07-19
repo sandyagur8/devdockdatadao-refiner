@@ -60,9 +60,9 @@ def test_simple_refiner():
     # Test schema
     print("\nTesting schema...")
     schema = refiner.transformer.get_schema()
-    schema_dict = json.loads(schema)
-    print(f"Schema title: {schema_dict.get('title', 'N/A')}")
-    assert schema_dict.get('title') == "Coding Assistant Training Data Schema", "Schema should have correct title"
+    print(f"Schema contains CREATE TABLE: {'CREATE TABLE' in schema}")
+    assert "CREATE TABLE" in schema, "Schema should contain CREATE TABLE statements"
+    assert "instruction_dataset" in schema, "Schema should contain instruction_dataset table"
     print("✓ Schema test passed")
     
     print("\nAll tests passed! The simple refiner is working correctly.")
