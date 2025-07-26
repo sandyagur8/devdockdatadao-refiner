@@ -4,18 +4,18 @@ import os
 
 from refiner.models.offchain_schema import OffChainSchema
 from refiner.models.output import Output
-from refiner.transformer.simple_transformer import SimpleTransformer
+from refiner.transformer.coding_assistant_transformer import CodingAssistantTransformer
 from refiner.config import settings
 # from refiner.utils.encrypt import encrypt_file
 from refiner.utils.ipfs import upload_file_to_ipfs, upload_json_to_ipfs
 
 class SimpleRefiner:
     def __init__(self):
-        self.transformer = SimpleTransformer()
+        self.db_path = os.path.join(settings.OUTPUT_DIR, 'db.libsql')
 
     def transform(self) -> Output:
-        """Simple transformation that just casts input data to output data."""
-        logging.info("Starting simple data transformation for verification")
+        """Transform input data into SQLite database for Vana compatibility."""
+        logging.info("Starting data transformation to SQLite database")
         output = Output()
 
         # Process all JSON files in input directory
@@ -27,9 +27,10 @@ class SimpleRefiner:
                 with open(input_file, 'r') as f:
                     input_data = json.load(f)
                     
-                    # Simple transformation - just pass through the data
-                    transformed_data = self.transformer.transform(input_data)
-                    logging.info(f"Transformed data: {transformed_data}")
+                    # Create transformer and process data into SQLite database
+                    transformer = CodingAssistantTransformer(self.db_path)
+                    transformer.process(input_data)
+                    logging.info(f"Transformed {input_filename} into SQLite database")
                     
                     # Create schema
                     schema = OffChainSchema(
@@ -37,32 +38,33 @@ class SimpleRefiner:
                         version=settings.SCHEMA_VERSION,
                         description=settings.SCHEMA_DESCRIPTION,
                         dialect=settings.SCHEMA_DIALECT,
-                        schema=self.transformer.get_schema()
+                        schema=transformer.get_schema()
                     )
                     output.schema = schema
-                    
-                    # Save transformed data to output
-                    output_file = os.path.join(settings.OUTPUT_DIR, 'transformed_data.json')
-                    with open(output_file, 'w') as f:
-                        json.dump(transformed_data, f, indent=2)
                     
                     # Save schema to output
                     schema_file = os.path.join(settings.OUTPUT_DIR, 'schema.json')
                     with open(schema_file, 'w') as f:
                         json.dump(schema.model_dump(), f, indent=2)
                     
-                    # Upload schema to IPFS if credentials are available
+                    # Log database info
+                    if os.path.exists(self.db_path):
+                        db_size = os.path.getsize(self.db_path)
+                        logging.info(f"Created SQLite database: {self.db_path} ({db_size} bytes)")
+                    
+                    # Upload to IPFS if credentials are available
                     try:
                         if settings.PINATA_API_KEY and settings.PINATA_API_SECRET:
+                            # Upload schema to IPFS
                             schema_ipfs_hash = upload_json_to_ipfs(schema.model_dump())
                             logging.info(f"Schema uploaded to IPFS with hash: {schema_ipfs_hash}")
                             
-                            # Upload transformed data to IPFS
-                            data_ipfs_hash = upload_json_to_ipfs(transformed_data)
-                            logging.info(f"Transformed data uploaded to IPFS with hash: {data_ipfs_hash}")
+                            # Upload database to IPFS
+                            db_ipfs_hash = upload_file_to_ipfs(self.db_path)
+                            logging.info(f"Database uploaded to IPFS with hash: {db_ipfs_hash}")
                             
                             # Set the refinement URL
-                            output.refinement_url = f"{settings.IPFS_GATEWAY_URL}/{data_ipfs_hash}"
+                            output.refinement_url = f"{settings.IPFS_GATEWAY_URL}/{db_ipfs_hash}"
                         else:
                             logging.warning("IPFS credentials not available, skipping IPFS upload")
                     except Exception as e:
@@ -70,5 +72,5 @@ class SimpleRefiner:
                     
                     break  # Process only the first JSON file for simplicity
 
-        logging.info("Simple data transformation completed successfully")
+        logging.info("Data transformation to SQLite completed successfully")
         return output 

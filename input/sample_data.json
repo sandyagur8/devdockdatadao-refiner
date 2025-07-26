@@ -1,21 +1,110 @@
 {
     "instruction_dataset": [{
-        "id": "example_001",
-        "instruction_type": "bug_fixing",
-        "instruction": "Fix the syntax error in this Python function",
-        "input": "def calculate_sum(a, b):\n    return a + b\n\nresult = calculate_sum(5, 3\nprint(result)",
-        "output": "def calculate_sum(a, b):\n    return a + b\n\nresult = calculate_sum(5, 3)\nprint(result)",
-        "context": {
-            "language": "python",
-            "user_prompt": "There's a syntax error in my function, can you help me fix it?"
+            "id": "example_001",
+            "instruction_type": "bug_fixing",
+            "instruction": "Fix the syntax error in this Python function",
+            "input": "def calculate_sum(a, b):\n    return a + b\n\nresult = calculate_sum(5, 3\nprint(result)",
+            "output": "def calculate_sum(a, b):\n    return a + b\n\nresult = calculate_sum(5, 3)\nprint(result)",
+            "context": {
+                "language": "python",
+                "user_prompt": "There's a syntax error in my function, can you help me fix it?",
+                "error_message": "SyntaxError: '(' was never closed",
+                "terminal_output": "  File \"test.py\", line 4\n    print(result)\n    ^\nSyntaxError: '(' was never closed",
+                "successful_execution": false,
+                "linting_errors": [{
+                    "line": 4,
+                    "column": 1,
+                    "message": "Missing closing parenthesis",
+                    "severity": "error",
+                    "rule": "syntax-error"
+                }]
+            },
+            "timestamp": "2024-01-15T10:30:00Z",
+            "model_used": "claude-3-sonnet"
         },
-        "timestamp": "2024-01-15T10:30:00Z",
-        "model_used": "claude-3-sonnet"
-    }],
+        {
+            "id": "example_002",
+            "instruction_type": "code_completion",
+            "instruction": "Complete this JavaScript function to sort an array",
+            "input": "function sortArray(arr) {\n    // TODO: implement sorting\n}",
+            "output": "function sortArray(arr) {\n    return arr.sort((a, b) => a - b);\n}",
+            "context": {
+                "language": "javascript",
+                "user_prompt": "I need to sort an array of numbers in ascending order",
+                "framework": "vanilla-js",
+                "dependencies": [],
+                "user_feedback": {
+                    "rating": 5,
+                    "comment": "Perfect solution!",
+                    "was_helpful": true,
+                    "helped_solve_problem": true
+                }
+            },
+            "timestamp": "2024-01-15T11:45:00Z",
+            "model_used": "gpt-4"
+        },
+        {
+            "id": "example_003",
+            "instruction_type": "algorithm_implementation",
+            "instruction": "Implement a binary search algorithm",
+            "input": "def binary_search(arr, target):\n    # Implement binary search here\n    pass",
+            "output": "def binary_search(arr, target):\n    left, right = 0, len(arr) - 1\n    \n    while left <= right:\n        mid = (left + right) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    \n    return -1",
+            "context": {
+                "language": "python",
+                "user_prompt": "I need an efficient search algorithm for sorted arrays",
+                "execution_time": 0.001,
+                "successful_execution": true,
+                "dependencies": []
+            },
+            "timestamp": "2024-01-16T09:20:00Z",
+            "model_used": "claude-3-sonnet"
+        },
+        {
+            "id": "example_004",
+            "instruction_type": "unit_test_generation",
+            "instruction": "Generate unit tests for this function",
+            "input": "def fibonacci(n):\n    if n <= 1:\n        return n\n    return fibonacci(n-1) + fibonacci(n-2)",
+            "output": "import unittest\n\nclass TestFibonacci(unittest.TestCase):\n    def test_base_cases(self):\n        self.assertEqual(fibonacci(0), 0)\n        self.assertEqual(fibonacci(1), 1)\n    \n    def test_positive_numbers(self):\n        self.assertEqual(fibonacci(2), 1)\n        self.assertEqual(fibonacci(3), 2)\n        self.assertEqual(fibonacci(5), 5)\n        self.assertEqual(fibonacci(10), 55)\n\nif __name__ == '__main__':\n    unittest.main()",
+            "context": {
+                "language": "python",
+                "user_prompt": "I need comprehensive tests for my fibonacci function",
+                "framework": "unittest",
+                "dependencies": [{
+                    "name": "unittest",
+                    "version": "built-in"
+                }]
+            },
+            "timestamp": "2024-01-16T14:30:00Z",
+            "model_used": "gpt-4"
+        },
+        {
+            "id": "example_005",
+            "instruction_type": "debugging",
+            "instruction": "Debug this infinite loop issue",
+            "input": "def count_down(n):\n    while n > 0:\n        print(n)\n        # Bug: forgot to decrement n\n    print('Done!')",
+            "output": "def count_down(n):\n    while n > 0:\n        print(n)\n        n -= 1  # Fix: decrement n\n    print('Done!')",
+            "context": {
+                "language": "python",
+                "user_prompt": "My countdown function never stops running",
+                "error_message": "KeyboardInterrupt: infinite loop detected",
+                "terminal_output": "1\n1\n1\n1\n^CKeyboardInterrupt",
+                "successful_execution": false,
+                "linting_errors": [{
+                    "line": 3,
+                    "column": 8,
+                    "message": "Potential infinite loop: variable 'n' never modified in loop",
+                    "severity": "warning",
+                    "rule": "infinite-loop"
+                }]
+            },
+            "timestamp": "2024-01-17T08:15:00Z",
+            "model_used": "claude-3-sonnet"
+        }
+    ],
     "dataset_metadata": {
         "version": "1.0.0",
-        "created_at": "2024-01-15T10:30:00Z",
-        "sample_count": 1,
+        "created_at": "2024-01-17T08:15:00Z",
+        "sample_count": 5,
         "license": "MIT",
         "source": "VS Code Extension Data Collection"
     }
