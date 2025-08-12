@@ -1,111 +1,287 @@
 {
     "instruction_dataset": [{
-            "id": "example_001",
-            "instruction_type": "bug_fixing",
-            "instruction": "Fix the syntax error in this Python function",
-            "input": "def calculate_sum(a, b):\n    return a + b\n\nresult = calculate_sum(5, 3\nprint(result)",
-            "output": "def calculate_sum(a, b):\n    return a + b\n\nresult = calculate_sum(5, 3)\nprint(result)",
+            "id": "entry_1755013833461_yxgrdln",
+            "instruction_type": "code_explanation",
+            "instruction": "User webview_message",
+            "input": "{\"messageType\":\"grpc_request\",\"hasData\":true,\"dataKeys\":[\"type\",\"grpc_request\"]}",
+            "output": "",
             "context": {
-                "language": "python",
-                "user_prompt": "There's a syntax error in my function, can you help me fix it?",
-                "error_message": "SyntaxError: '(' was never closed",
-                "terminal_output": "  File \"test.py\", line 4\n    print(result)\n    ^\nSyntaxError: '(' was never closed",
-                "successful_execution": false,
-                "linting_errors": [{
-                    "line": 4,
-                    "column": 1,
-                    "message": "Missing closing parenthesis",
-                    "severity": "error",
-                    "rule": "syntax-error"
-                }]
+                "language": "unknown",
+                "user_prompt": "User webview_message"
             },
-            "timestamp": "2024-01-15T10:30:00Z",
-            "model_used": "claude-3-sonnet"
+            "timestamp": "2025-08-12T15:50:33.461Z",
+            "model_used": "unknown"
         },
         {
-            "id": "example_002",
-            "instruction_type": "code_completion",
-            "instruction": "Complete this JavaScript function to sort an array",
-            "input": "function sortArray(arr) {\n    // TODO: implement sorting\n}",
-            "output": "function sortArray(arr) {\n    return arr.sort((a, b) => a - b);\n}",
+            "id": "entry_1755013834503_nyg6gqk",
+            "instruction_type": "code_explanation",
+            "instruction": "User webview_message",
+            "input": "{\"messageType\":\"devdock.login\",\"hasData\":true,\"dataKeys\":[\"type\"]}",
+            "output": "",
             "context": {
-                "language": "javascript",
-                "user_prompt": "I need to sort an array of numbers in ascending order",
-                "framework": "vanilla-js",
+                "language": "unknown",
+                "user_prompt": "User webview_message"
+            },
+            "timestamp": "2025-08-12T15:50:34.503Z",
+            "model_used": "unknown"
+        },
+        {
+            "id": "entry_1755013858895_ehobzlh",
+            "instruction_type": "code_explanation",
+            "instruction": "User webview_message",
+            "input": "{\"messageType\":\"passwordResponse\",\"hasData\":true,\"dataKeys\":[\"type\",\"password\",\"requestId\"]}",
+            "output": "",
+            "context": {
+                "language": "unknown",
+                "user_prompt": "User webview_message"
+            },
+            "timestamp": "2025-08-12T15:50:58.895Z",
+            "model_used": "unknown"
+        },
+        {
+            "id": "entry_1755013950514_0vl7bdk",
+            "instruction_type": "code_explanation",
+            "instruction": "New session started: session_1755013950514_0ecpzopq3",
+            "input": "{\"taskId\":\"1754584539984\",\"lastContributedTime\":0}",
+            "output": "",
+            "context": {
+                "language": "unknown",
+                "user_prompt": "New session started: session_1755013950514_0ecpzopq3"
+            },
+            "timestamp": "2025-08-12T15:52:30.514Z",
+            "model_used": "unknown"
+        },
+        {
+            "id": "entry_1755013950515_bmjt2o2",
+            "instruction_type": "code_explanation",
+            "instruction": "User extension_initialized",
+            "input": "{\"taskId\":\"1754584539984\",\"timestamp\":1755013950515,\"platform\":\"darwin\"}",
+            "output": "",
+            "context": {
+                "language": "unknown",
+                "user_prompt": "User extension_initialized"
+            },
+            "timestamp": "2025-08-12T15:52:30.515Z",
+            "model_used": "unknown"
+        },
+        {
+            "id": "entry_1755013980933_3ku7c6t",
+            "instruction_type": "code_explanation",
+            "instruction": "Hii",
+            "input": "Hii",
+            "output": "",
+            "context": {
+                "language": "unknown",
+                "user_prompt": "Hii",
+                "project_structure": [{
+                    "path": "devdock-0.1.18.vsix",
+                    "type": "file"
+                }],
                 "dependencies": [],
-                "user_feedback": {
-                    "rating": 5,
-                    "comment": "Perfect solution!",
-                    "was_helpful": true,
-                    "helped_solve_problem": true
-                }
+                "runtime_environment": {
+                    "os": "darwin",
+                    "language_version": "unknown",
+                    "environment_vars": {
+                        "PATH": "/Users/sandyagu/Library/pnpm:/opt/homebrew/opt/gnu-sed/libexec/gnubin:/opt/homebrew/opt/gawk/libexec/gnubin:/Users/sandyagu/.local/share/solana/install/active_release/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/sandyagu/.cargo/bin:/Users/sandyagu/.foundry/bin:/Users/sandyagu/.local/bin:/Users/sandyagu/.local/bin:/usr/local/gcc-arm-none-eabi-10.3-2021.10/bin:/usr/local/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/bin",
+                        "HOME": "/Users/sandyagu",
+                        "USER": "sandyagu",
+                        "SHELL": "/bin/zsh"
+                    }
+                },
+                "original_llm_response": "",
+                "llm_conversation_history": [],
+                "user_interaction_history": [],
+                "metadata": {
+                    "created_at": "2025-08-12T15:53:00.804Z",
+                    "extension_version": "0.1.18",
+                    "vs_code_version": "1.103.0",
+                    "anonymized_user_id": "user_48a5408d",
+                    "skill_level": "intermediate",
+                    "tags": [
+                        "code_explanation"
+                    ]
+                },
+                "task_type": "initial_task"
             },
-            "timestamp": "2024-01-15T11:45:00Z",
-            "model_used": "gpt-4"
+            "timestamp": "2025-08-12T15:53:00.804Z",
+            "model_used": "devdock-default"
         },
         {
-            "id": "example_003",
-            "instruction_type": "algorithm_implementation",
-            "instruction": "Implement a binary search algorithm",
-            "input": "def binary_search(arr, target):\n    # Implement binary search here\n    pass",
-            "output": "def binary_search(arr, target):\n    left, right = 0, len(arr) - 1\n    \n    while left <= right:\n        mid = (left + right) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    \n    return -1",
+            "id": "entry_1755014170006_zzpeb4l",
+            "instruction_type": "code_explanation",
+            "instruction": "Create a to do website",
+            "input": "Create a to do website",
+            "output": "",
             "context": {
-                "language": "python",
-                "user_prompt": "I need an efficient search algorithm for sorted arrays",
-                "execution_time": 0.001,
-                "successful_execution": true,
-                "dependencies": []
+                "language": "unknown",
+                "user_prompt": "Create a to do website",
+                "project_structure": [{
+                    "path": "devdock-0.1.18.vsix",
+                    "type": "file"
+                }],
+                "dependencies": [],
+                "runtime_environment": {
+                    "os": "darwin",
+                    "language_version": "unknown",
+                    "environment_vars": {
+                        "PATH": "/Users/sandyagu/Library/pnpm:/opt/homebrew/opt/gnu-sed/libexec/gnubin:/opt/homebrew/opt/gawk/libexec/gnubin:/Users/sandyagu/.local/share/solana/install/active_release/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/sandyagu/.cargo/bin:/Users/sandyagu/.foundry/bin:/Users/sandyagu/.local/bin:/Users/sandyagu/.local/bin:/usr/local/gcc-arm-none-eabi-10.3-2021.10/bin:/usr/local/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/bin",
+                        "HOME": "/Users/sandyagu",
+                        "USER": "sandyagu",
+                        "SHELL": "/bin/zsh"
+                    }
+                },
+                "original_llm_response": "",
+                "llm_conversation_history": [{
+                        "role": "user",
+                        "content": "Hii",
+                        "timestamp": "2025-08-12T15:53:00.804Z"
+                    },
+                    {
+                        "role": "assistant",
+                        "content": "",
+                        "timestamp": "2025-08-12T15:53:00.804Z"
+                    }
+                ],
+                "user_interaction_history": [{
+                    "timestamp": "2025-08-12T15:53:00.935Z",
+                    "type": "prompt",
+                    "content": "Hii"
+                }],
+                "metadata": {
+                    "created_at": "2025-08-12T15:56:09.605Z",
+                    "extension_version": "0.1.18",
+                    "vs_code_version": "1.103.0",
+                    "anonymized_user_id": "user_48a5408d",
+                    "skill_level": "intermediate",
+                    "tags": [
+                        "code_explanation"
+                    ]
+                },
+                "task_type": "initial_task"
             },
-            "timestamp": "2024-01-16T09:20:00Z",
-            "model_used": "claude-3-sonnet"
+            "timestamp": "2025-08-12T15:56:09.605Z",
+            "model_used": "devdock-default"
         },
         {
-            "id": "example_004",
-            "instruction_type": "unit_test_generation",
-            "instruction": "Generate unit tests for this function",
-            "input": "def fibonacci(n):\n    if n <= 1:\n        return n\n    return fibonacci(n-1) + fibonacci(n-2)",
-            "output": "import unittest\n\nclass TestFibonacci(unittest.TestCase):\n    def test_base_cases(self):\n        self.assertEqual(fibonacci(0), 0)\n        self.assertEqual(fibonacci(1), 1)\n    \n    def test_positive_numbers(self):\n        self.assertEqual(fibonacci(2), 1)\n        self.assertEqual(fibonacci(3), 2)\n        self.assertEqual(fibonacci(5), 5)\n        self.assertEqual(fibonacci(10), 55)\n\nif __name__ == '__main__':\n    unittest.main()",
+            "id": "entry_1755014188912_103hj1b",
+            "instruction_type": "style_enforcement",
+            "instruction": "{\"tool\":\"newFileCreated\",\"path\":\"todo-app/index.html\",\"content\":\"<!DOCTYPE html>\\n<html lang=\\\"en\\\">\\n<head>\\n    <meta charset=\\\"UTF-8\\\">\\n    <meta name=\\\"viewport\\\" content=\\\"width=device-width, initial-scale=1.0\\\">\\n    <title>Todo App</title>\\n    <link rel=\\\"stylesheet\\\" href=\\\"styles.css\\\">\\n</head>\\n<body>\\n    <div class=\\\"container\\\">\\n        <h1>Todo List</h1>\\n        <div class=\\\"todo-input\\\">\\n            <input type=\\\"text\\\" id=\\\"taskInput\\\" placeholder=\\\"Add a new task...\\\">\\n            <button onclick=\\\"addTask()\\\">Add</button>\\n        </div>\\n        <ul id=\\\"taskList\\\"></ul>\\n    </div>\\n    <script src=\\\"script.js\\\"></script>\\n</body>\\n</html>\",\"operationIsLocatedInWorkspace\":true}",
+            "input": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Todo App</title>\n    <link rel=\"stylesheet\" href=\"styles.css\">\n</head>\n<body>\n    <div class=\"container\">\n        <h1>Todo List</h1>\n        <div class=\"todo-input\">\n            <input type=\"text\" id=\"taskInput\" placeholder=\"Add a new task...\">\n            <button onclick=\"addTask()\">Add</button>\n        </div>\n        <ul id=\"taskList\"></ul>\n    </div>\n    <script src=\"script.js\"></script>\n</body>\n</html>\n",
+            "output": "\\n\\n\\n## search_files\\nDescription: Request to perform a regex search across files in a specified directory, providing context-rich results. This tool searches for patterns or specific content across multiple files, displaying each match with encapsulating context.\\nParameters:\\n- path: (required) The path of the directory to search in (relative to the current working directory /Users/sandyagu/Desktop/Devdock_extesnion_testing/4). This directo",
             "context": {
-                "language": "python",
-                "user_prompt": "I need comprehensive tests for my fibonacci function",
-                "framework": "unittest",
-                "dependencies": [{
-                    "name": "unittest",
-                    "version": "built-in"
-                }]
+                "language": "html",
+                "user_prompt": "{\"tool\":\"newFileCreated\",\"path\":\"todo-app/index.html\",\"content\":\"<!DOCTYPE html>\\n<html lang=\\\"en\\\">\\n<head>\\n    <meta charset=\\\"UTF-8\\\">\\n    <meta name=\\\"viewport\\\" content=\\\"width=device-width, initial-scale=1.0\\\">\\n    <title>Todo App</title>\\n    <link rel=\\\"stylesheet\\\" href=\\\"styles.css\\\">\\n</head>\\n<body>\\n    <div class=\\\"container\\\">\\n        <h1>Todo List</h1>\\n        <div class=\\\"todo-input\\\">\\n            <input type=\\\"text\\\" id=\\\"taskInput\\\" placeholder=\\\"Add a new task...\\\">\\n            <button onclick=\\\"addTask()\\\">Add</button>\\n        </div>\\n        <ul id=\\\"taskList\\\"></ul>\\n    </div>\\n    <script src=\\\"script.js\\\"></script>\\n</body>\\n</html>\",\"operationIsLocatedInWorkspace\":true}",
+                "file_path": "todo-app/index.html",
+                "file_content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Todo App</title>\n    <link rel=\"stylesheet\" href=\"styles.css\">\n</head>\n<body>\n    <div class=\"container\">\n        <h1>Todo List</h1>\n        <div class=\"todo-input\">\n            <input type=\"text\" id=\"taskInput\" placeholder=\"Add a new task...\">\n            <button onclick=\"addTask()\">Add</button>\n        </div>\n        <ul id=\"taskList\"></ul>\n    </div>\n    <script src=\"script.js\"></script>\n</body>\n</html>\n",
+                "file_metadata": {
+                    "size": 563,
+                    "creation_date": "2025-08-12T15:56:20.975Z",
+                    "modification_date": "2025-08-12T15:56:22.405Z",
+                    "line_count": 21
+                },
+                "editor_state": {
+                    "cursor_position": {
+                        "line": 0,
+                        "column": 0
+                    },
+                    "visible_range": {
+                        "start_line": 0,
+                        "end_line": 20
+                    }
+                },
+                "linting_errors": [],
+                "project_structure": [{
+                        "path": "devdock-0.1.18.vsix",
+                        "type": "file"
+                    },
+                    {
+                        "path": "todo-app/index.html",
+                        "type": "file"
+                    }
+                ],
+                "dependencies": [],
+                "runtime_environment": {
+                    "os": "darwin",
+                    "language_version": "unknown",
+                    "environment_vars": {
+                        "PATH": "/Users/sandyagu/Library/pnpm:/opt/homebrew/opt/gnu-sed/libexec/gnubin:/opt/homebrew/opt/gawk/libexec/gnubin:/Users/sandyagu/.local/share/solana/install/active_release/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/sandyagu/.cargo/bin:/Users/sandyagu/.foundry/bin:/Users/sandyagu/.local/bin:/Users/sandyagu/.local/bin:/usr/local/gcc-arm-none-eabi-10.3-2021.10/bin:/usr/local/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/bin",
+                        "HOME": "/Users/sandyagu",
+                        "USER": "sandyagu",
+                        "SHELL": "/bin/zsh"
+                    }
+                },
+                "original_llm_response": "\\n\\n\\n## search_files\\nDescription: Request to perform a regex search across files in a specified directory, providing context-rich results. This tool searches for patterns or specific content across multiple files, displaying each match with encapsulating context.\\nParameters:\\n- path: (required) The path of the directory to search in (relative to the current working directory /Users/sandyagu/Desktop/Devdock_extesnion_testing/4). This directo",
+                "llm_conversation_history": [{
+                        "role": "user",
+                        "content": "Hii",
+                        "timestamp": "2025-08-12T15:53:00.804Z"
+                    },
+                    {
+                        "role": "assistant",
+                        "content": "",
+                        "timestamp": "2025-08-12T15:53:00.804Z"
+                    },
+                    {
+                        "role": "user",
+                        "content": "Create a to do website",
+                        "timestamp": "2025-08-12T15:56:09.605Z"
+                    },
+                    {
+                        "role": "assistant",
+                        "content": "",
+                        "timestamp": "2025-08-12T15:56:09.605Z"
+                    }
+                ],
+                "user_interaction_history": [{
+                        "timestamp": "2025-08-12T15:53:00.935Z",
+                        "type": "prompt",
+                        "content": "Hii"
+                    },
+                    {
+                        "timestamp": "2025-08-12T15:56:10.008Z",
+                        "type": "prompt",
+                        "content": "Create a to do website"
+                    }
+                ],
+                "metadata": {
+                    "created_at": "2025-08-12T15:56:28.711Z",
+                    "extension_version": "0.1.18",
+                    "vs_code_version": "1.103.0",
+                    "anonymized_user_id": "user_48a5408d",
+                    "skill_level": "intermediate",
+                    "tags": [
+                        "style_enforcement",
+                        "testing",
+                        "frontend"
+                    ]
+                },
+                "interaction_type": "tool",
+                "message_type": "text",
+                "successful_execution": true
             },
-            "timestamp": "2024-01-16T14:30:00Z",
-            "model_used": "gpt-4"
+            "timestamp": "2025-08-12T15:56:28.711Z",
+            "model_used": "devdock-default"
         },
         {
-            "id": "example_005",
-            "instruction_type": "debugging",
-            "instruction": "Debug this infinite loop issue",
-            "input": "def count_down(n):\n    while n > 0:\n        print(n)\n        # Bug: forgot to decrement n\n    print('Done!')",
-            "output": "def count_down(n):\n    while n > 0:\n        print(n)\n        n -= 1  # Fix: decrement n\n    print('Done!')",
+            "id": "entry_1755014985381_czqnyqz",
+            "instruction_type": "api_integration",
+            "instruction": "API request made",
+            "input": "{\"systemPrompt\":\"You are Devdock, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\\n\\n====\\n\\nTOOL USE\\n\\nYou have access to a set of tools that are executed upon the user's approval. You can use one tool per message, and will receive the result of that tool use in the user's response. You use tools step-by-step to accomplish a given task, with each tool use informed by the result of the previous tool use.\\n\\n# Tool Use Formatting...\",\"conversationLength\":1,\"model\":\"devdock-default\"}",
+            "output": "{}",
             "context": {
-                "language": "python",
-                "user_prompt": "My countdown function never stops running",
-                "error_message": "KeyboardInterrupt: infinite loop detected",
-                "terminal_output": "1\n1\n1\n1\n^CKeyboardInterrupt",
-                "successful_execution": false,
-                "linting_errors": [{
-                    "line": 3,
-                    "column": 8,
-                    "message": "Potential infinite loop: variable 'n' never modified in loop",
-                    "severity": "warning",
-                    "rule": "infinite-loop"
-                }]
+                "language": "unknown",
+                "user_prompt": "API request made",
+                "api_call": true
             },
-            "timestamp": "2024-01-17T08:15:00Z",
-            "model_used": "claude-3-sonnet"
+            "timestamp": "2025-08-12T15:53:05.381Z",
+            "model_used": "unknown"
         }
     ],
     "dataset_metadata": {
         "version": "1.0.0",
-        "created_at": "2024-01-17T08:15:00Z",
-        "sample_count": 5,
-        "license": "MIT",
-        "source": "VS Code Extension Data Collection"
+        "created_at": "2025-08-12T16:00:14.945Z",
+        "sample_count": 10,
+        "source": "VS Code Extension Data Collection",
+        "license": "MIT"
     }
 }
