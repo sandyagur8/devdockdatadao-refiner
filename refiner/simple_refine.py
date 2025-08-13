@@ -6,7 +6,7 @@ from refiner.models.offchain_schema import OffChainSchema
 from refiner.models.output import Output
 from refiner.transformer.coding_assistant_transformer import CodingAssistantTransformer
 from refiner.config import settings
-# from refiner.utils.encrypt import encrypt_file
+from refiner.utils.encrypt import encrypt_file
 from refiner.utils.ipfs import upload_file_to_ipfs, upload_json_to_ipfs
 
 class SimpleRefiner:
@@ -52,6 +52,19 @@ class SimpleRefiner:
                         db_size = os.path.getsize(self.db_path)
                         logging.info(f"Created SQLite database: {self.db_path} ({db_size} bytes)")
                     
+                    # Encrypt the database file for Vana compatibility
+                    encrypted_db_path = None
+                    if settings.REFINEMENT_ENCRYPTION_KEY and os.path.exists(self.db_path):
+                        try:
+                            encrypted_db_path = encrypt_file(settings.REFINEMENT_ENCRYPTION_KEY, self.db_path)
+                            encrypted_size = os.path.getsize(encrypted_db_path)
+                            logging.info(f"Database encrypted: {encrypted_db_path} ({encrypted_size} bytes)")
+                        except Exception as e:
+                            logging.error(f"Failed to encrypt database: {e}")
+                            encrypted_db_path = None
+                    else:
+                        logging.warning("No encryption key provided or database file not found, skipping encryption")
+                    
                     # Upload to IPFS if credentials are available
                     try:
                         if settings.PINATA_API_KEY and settings.PINATA_API_SECRET:
@@ -59,9 +72,11 @@ class SimpleRefiner:
                             schema_ipfs_hash = upload_json_to_ipfs(schema.model_dump())
                             logging.info(f"Schema uploaded to IPFS with hash: {schema_ipfs_hash}")
                             
-                            # Upload database to IPFS
-                            db_ipfs_hash = upload_file_to_ipfs(self.db_path)
-                            logging.info(f"Database uploaded to IPFS with hash: {db_ipfs_hash}")
+                            # Upload encrypted database to IPFS (or fallback to unencrypted)
+                            upload_file = encrypted_db_path if encrypted_db_path else self.db_path
+                            db_ipfs_hash = upload_file_to_ipfs(upload_file)
+                            file_type = "encrypted database" if encrypted_db_path else "unencrypted database"
+                            logging.info(f"{file_type.title()} uploaded to IPFS with hash: {db_ipfs_hash}")
                             
                             # Set the refinement URL
                             output.refinement_url = f"{settings.IPFS_GATEWAY_URL}/{db_ipfs_hash}"

@@ -1,4 +1,4 @@
-pgpy
+cryptography
 pydantic
 pydantic_settings
 requests
