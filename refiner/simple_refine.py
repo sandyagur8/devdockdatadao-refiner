@@ -6,7 +6,16 @@ from refiner.models.offchain_schema import OffChainSchema
 from refiner.models.output import Output
 from refiner.transformer.coding_assistant_transformer import CodingAssistantTransformer
 from refiner.config import settings
-from refiner.utils.encrypt import encrypt_file
+try:
+    from refiner.utils.encrypt import encrypt_file
+    ENCRYPTION_AVAILABLE = True
+except ImportError as e:
+    # Handle Python 3.13 compatibility issue with pgpy/imghdr
+    print(f"Warning: Encryption not available locally (Python 3.13 issue): {e}")
+    print("Encryption will work in Docker container with Python 3.12")
+    ENCRYPTION_AVAILABLE = False
+    def encrypt_file(*args, **kwargs):
+        raise ImportError("Encryption not available in Python 3.13 - use Docker container")
 from refiner.utils.ipfs import upload_file_to_ipfs, upload_json_to_ipfs
 
 class SimpleRefiner:
@@ -55,13 +64,17 @@ class SimpleRefiner:
                     # Encrypt the database file for Vana compatibility
                     encrypted_db_path = None
                     if settings.REFINEMENT_ENCRYPTION_KEY and os.path.exists(self.db_path):
-                        try:
-                            encrypted_db_path = encrypt_file(settings.REFINEMENT_ENCRYPTION_KEY, self.db_path)
-                            encrypted_size = os.path.getsize(encrypted_db_path)
-                            logging.info(f"Database encrypted: {encrypted_db_path} ({encrypted_size} bytes)")
-                        except Exception as e:
-                            logging.error(f"Failed to encrypt database: {e}")
-                            encrypted_db_path = None
+                        if ENCRYPTION_AVAILABLE:
+                            try:
+                                encrypted_db_path = encrypt_file(settings.REFINEMENT_ENCRYPTION_KEY, self.db_path)
+                                encrypted_size = os.path.getsize(encrypted_db_path)
+                                logging.info(f"Database encrypted: {encrypted_db_path} ({encrypted_size} bytes)")
+                            except Exception as e:
+                                logging.error(f"Failed to encrypt database: {e}")
+                                encrypted_db_path = None
+                        else:
+                            logging.warning("Encryption not available (Python 3.13 compatibility issue)")
+                            logging.info("Database will be encrypted when running in Docker container (Python 3.12)")
                     else:
                         logging.warning("No encryption key provided or database file not found, skipping encryption")
                     
