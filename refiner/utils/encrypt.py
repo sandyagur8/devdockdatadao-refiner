@@ -85,11 +85,18 @@ def create_pgp_armored_file(encryption_key: str, file_path: str, output_path: st
         # Create PGP-armored format
         encoded_data = base64.b64encode(encrypted_data).decode('ascii')
         
-        # Create PGP armor format
+        # Create PGP armor format with proper line breaks (64 chars per line)
+        # Split base64 data into 64-character lines as per PGP standard
+        lines = []
+        for i in range(0, len(encoded_data), 64):
+            lines.append(encoded_data[i:i+64])
+        
+        formatted_data = '\n'.join(lines)
+        
         pgp_content = f"""-----BEGIN PGP MESSAGE-----
 Version: Vana Refinement Service
 
-{encoded_data}
+{formatted_data}
 -----END PGP MESSAGE-----
 """
         
@@ -163,7 +170,7 @@ def decrypt_file(encryption_key: str, file_path: str, output_path: str = None) -
         if not data_lines:
             raise ValueError("No encrypted data found in PGP file")
         
-        # Decode base64 data
+        # Decode base64 data (join all lines back together)
         encoded_data = ''.join(data_lines)
         encrypted_data = base64.b64decode(encoded_data)
         
