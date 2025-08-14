@@ -1,4 +1,4 @@
-cryptography
+python-gnupg
 pydantic
 pydantic_settings
 requests

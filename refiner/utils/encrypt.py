@@ -1,201 +1,146 @@
 import os
 import tempfile
-import subprocess
 import logging
-from pathlib import Path
-from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-import base64
+from typing import Union
+
+import gnupg
 from refiner.config import settings
 
 
-def derive_key_from_passphrase(passphrase: str, salt: bytes = None) -> bytes:
-    """Derive a key from a passphrase using PBKDF2."""
-    if salt is None:
-        salt = b'vana_refinement_salt'  # Static salt for consistency
-    
-    kdf = PBKDF2HMAC(
-        algorithm=hashes.SHA256(),
-        length=32,
-        salt=salt,
-        iterations=100000,
-    )
-    key = base64.urlsafe_b64encode(kdf.derive(passphrase.encode()))
-    return key
-
-
-def encrypt_file_aes(encryption_key: str, file_path: str, output_path: str = None) -> str:
-    """Encrypts a file using AES encryption with Fernet.
-    
-    Args:
-        encryption_key: The passphrase to encrypt with
-        file_path: Path to the file to encrypt
-        output_path: Optional path to save encrypted file (defaults to file_path + .encrypted)
-    
-    Returns:
-        Path to encrypted file
-    """
-    if output_path is None:
-        output_path = f"{file_path}.encrypted"
-    
-    # Derive key from passphrase
-    key = derive_key_from_passphrase(encryption_key)
-    fernet = Fernet(key)
-    
-    # Read and encrypt file
-    with open(file_path, 'rb') as f:
-        file_data = f.read()
-    
-    encrypted_data = fernet.encrypt(file_data)
-    
-    # Write encrypted file
-    with open(output_path, 'wb') as f:
-        f.write(encrypted_data)
-    
-    logging.info(f"File encrypted using AES: {output_path}")
-    return output_path
-
-
-def create_pgp_armored_file(encryption_key: str, file_path: str, output_path: str = None) -> str:
-    """Creates a PGP-armored file that's compatible with Vana's decryption expectations.
-    
-    This creates a format that looks like PGP but uses our AES encryption internally.
-    
-    Args:
-        encryption_key: The passphrase to encrypt with
-        file_path: Path to the file to encrypt
-        output_path: Optional path to save encrypted file (defaults to file_path + .pgp)
-    
-    Returns:
-        Path to PGP-armored encrypted file
-    """
-    if output_path is None:
-        output_path = f"{file_path}.pgp"
-    
-    # First encrypt with AES
-    temp_encrypted = f"{file_path}.temp_encrypted"
-    encrypt_file_aes(encryption_key, file_path, temp_encrypted)
-    
-    try:
-        # Read encrypted data
-        with open(temp_encrypted, 'rb') as f:
-            encrypted_data = f.read()
-        
-        # Create PGP-armored format
-        encoded_data = base64.b64encode(encrypted_data).decode('ascii')
-        
-        # Create PGP armor format with proper line breaks (64 chars per line)
-        # Split base64 data into 64-character lines as per PGP standard
-        lines = []
-        for i in range(0, len(encoded_data), 64):
-            lines.append(encoded_data[i:i+64])
-        
-        formatted_data = '\n'.join(lines)
-        
-        pgp_content = f"""-----BEGIN PGP MESSAGE-----
-Version: Vana Refinement Service
-
-{formatted_data}
------END PGP MESSAGE-----
-"""
-        
-        # Write PGP file
-        with open(output_path, 'w') as f:
-            f.write(pgp_content)
-        
-        logging.info(f"PGP-armored file created: {output_path}")
-        return output_path
-        
-    finally:
-        # Clean up temp file
-        if os.path.exists(temp_encrypted):
-            os.remove(temp_encrypted)
+class FileDecryptionError(Exception):
+    """Exception raised when file decryption fails."""
+    def __init__(self, error: str):
+        self.error = error
+        super().__init__(self.error)
 
 
 def encrypt_file(encryption_key: str, file_path: str, output_path: str = None) -> str:
-    """Main encryption function that creates Vana-compatible encrypted files.
+    """
+    Encrypts a file using GPG encryption with symmetric encryption.
     
     Args:
-        encryption_key: The passphrase to encrypt with
-        file_path: Path to the file to encrypt
-        output_path: Optional path to save encrypted file (defaults to file_path + .pgp)
+        encryption_key (str): The passphrase to encrypt with
+        file_path (str): Path to the file to encrypt
+        output_path (str): Optional path to save encrypted file (defaults to file_path + .pgp)
     
     Returns:
-        Path to encrypted file
+        str: Path to encrypted file
+    
+    Raises:
+        FileDecryptionError: If encryption fails
     """
     if output_path is None:
         output_path = f"{file_path}.pgp"
     
-    # Use PGP-armored format for Vana compatibility
-    return create_pgp_armored_file(encryption_key, file_path, output_path)
-
-
-def decrypt_file(encryption_key: str, file_path: str, output_path: str = None) -> str:
-    """Decrypts a file that was encrypted with our encrypt_file function.
-    
-    Args:
-        encryption_key: The passphrase to decrypt with
-        file_path: Path to the encrypted file
-        output_path: Optional path to save decrypted file
-    
-    Returns:
-        Path to decrypted file
-    """
-    if output_path is None:
-        if file_path.endswith('.pgp'):
-            output_path = file_path[:-4]  # Remove .pgp extension
-        else:
-            output_path = f"{file_path}.decrypted"
+    # Initialize GPG
+    gpg = gnupg.GPG()
     
     try:
-        # Read PGP-armored file
-        with open(file_path, 'r') as f:
-            content = f.read()
+        # Read the file to encrypt
+        with open(file_path, 'rb') as f:
+            file_data = f.read()
         
-        # Extract base64 data from PGP armor
-        lines = content.split('\n')
-        data_lines = []
-        in_data = False
+        # Encrypt using GPG symmetric encryption
+        encrypted_data = gpg.encrypt(
+            file_data,
+            recipients=None,  # No recipients for symmetric encryption
+            symmetric=True,   # Use symmetric encryption
+            passphrase=encryption_key,
+            armor=True,       # Create ASCII-armored output
+            always_trust=True
+        )
         
-        for line in lines:
-            if line.startswith('-----BEGIN PGP MESSAGE-----'):
-                in_data = True
-                continue
-            elif line.startswith('-----END PGP MESSAGE-----'):
-                break
-            elif in_data and line.strip() and not line.startswith('Version:'):
-                data_lines.append(line.strip())
+        if not encrypted_data.ok:
+            raise FileDecryptionError(
+                error=f"GPG encryption failed: Status '{encrypted_data.status}', Stderr: '{encrypted_data.stderr}'"
+            )
         
-        if not data_lines:
-            raise ValueError("No encrypted data found in PGP file")
+        # Write encrypted data to output file
+        with open(output_path, 'w') as f:
+            f.write(str(encrypted_data))
         
-        # Decode base64 data (join all lines back together)
-        encoded_data = ''.join(data_lines)
-        encrypted_data = base64.b64decode(encoded_data)
-        
-        # Decrypt using AES
-        key = derive_key_from_passphrase(encryption_key)
-        fernet = Fernet(key)
-        decrypted_data = fernet.decrypt(encrypted_data)
-        
-        # Write decrypted file
-        with open(output_path, 'wb') as f:
-            f.write(decrypted_data)
-        
-        logging.info(f"File decrypted: {output_path}")
+        logging.info(f"File encrypted successfully: {output_path}")
         return output_path
         
     except Exception as e:
-        logging.error(f"Decryption failed: {e}")
-        raise
+        if isinstance(e, FileDecryptionError):
+            raise
+        else:
+            raise FileDecryptionError(error=f"An unexpected error occurred during encryption: {str(e)}")
 
 
-# Test function
+def decrypt_file(encrypted_file_path: str, encryption_key: str, output_path: str = None) -> str:
+    """
+    Decrypts a file using GPG encryption. Based on Vana's implementation.
+
+    Args:
+        encrypted_file_path (str): Path to the encrypted file.
+        encryption_key (str): Encryption key for decryption.
+        output_path (str): Optional path for decrypted file.
+
+    Returns:
+        str: Path to the decrypted file.
+
+    Raises:
+        FileDecryptionError: If decryption fails.
+    """
+    gpg = gnupg.GPG()
+    
+    if output_path is None:
+        if encrypted_file_path.endswith('.pgp'):
+            output_path = encrypted_file_path[:-4]  # Remove .pgp extension
+        else:
+            output_path = f"{encrypted_file_path}.decrypted"
+    
+    # Ensure output directory exists
+    output_dir = os.path.dirname(output_path)
+    if output_dir:
+        try:
+            os.makedirs(output_dir, exist_ok=True)
+            logging.info(f"Ensured output directory exists: {output_dir}")
+        except OSError as e:
+            raise FileDecryptionError(error=f"Could not create output directory '{output_dir}': {e}")
+
+    try:
+        with open(encrypted_file_path, 'rb') as encrypted_file:
+            decrypted_data = gpg.decrypt_file(
+                encrypted_file,
+                passphrase=encryption_key,
+                output=output_path
+            )
+
+            logging.info(f"GPG decryption status: {decrypted_data.status}")
+            logging.debug(f"GPG stderr: {decrypted_data.stderr}")
+
+            if not decrypted_data.ok:
+                try:
+                    if os.path.exists(output_path):
+                        os.remove(output_path)
+                except OSError:
+                    pass
+                raise FileDecryptionError(
+                    error=f"GPG decryption failed: Status '{decrypted_data.status}', Stderr: '{decrypted_data.stderr}'"
+                )
+
+    except Exception as e:
+        try:
+            if os.path.exists(output_path):
+                os.remove(output_path)
+        except OSError:
+            pass
+        if isinstance(e, FileDecryptionError):
+            raise
+        else:
+            raise FileDecryptionError(error=f"An unexpected error occurred during decryption: {str(e)}")
+
+    logging.info(f"Successfully decrypted file to: {output_path}")
+    return output_path
+
+
 def test_encryption():
     """Test the encryption/decryption functionality."""
     test_file = "test_file.txt"
-    test_content = "This is a test file for encryption."
+    test_content = "This is a test file for GPG encryption."
     
     # Create test file
     with open(test_file, 'w') as f:
@@ -207,7 +152,7 @@ def test_encryption():
         print(f"Encrypted file created: {encrypted_file}")
         
         # Test decryption
-        decrypted_file = decrypt_file("test_key", encrypted_file)
+        decrypted_file = decrypt_file(encrypted_file, "test_key")
         print(f"Decrypted file created: {decrypted_file}")
         
         # Verify content
@@ -215,10 +160,15 @@ def test_encryption():
             decrypted_content = f.read()
         
         if decrypted_content == test_content:
-            print("✅ Encryption/Decryption test passed!")
+            print("✅ GPG Encryption/Decryption test passed!")
         else:
-            print("❌ Encryption/Decryption test failed!")
+            print("❌ GPG Encryption/Decryption test failed!")
+            print(f"Expected: {test_content}")
+            print(f"Got: {decrypted_content}")
             
+    except Exception as e:
+        print(f"❌ Test failed with error: {e}")
+        
     finally:
         # Clean up
         for file in [test_file, f"{test_file}.pgp", f"{test_file}.pgp"]:
@@ -236,8 +186,8 @@ if __name__ == "__main__":
         print(f"Database encrypted to: {encrypted_path}")
         
         # Test decryption
-        decrypted_path = decrypt_file(settings.REFINEMENT_ENCRYPTION_KEY, encrypted_path)
+        decrypted_path = decrypt_file(encrypted_path, settings.REFINEMENT_ENCRYPTION_KEY)
         print(f"Database decrypted to: {decrypted_path}")
     else:
-        print("Running encryption test...")
+        print("Running GPG encryption test...")
         test_encryption()
